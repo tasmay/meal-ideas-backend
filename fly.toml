@@ -1,0 +1,33 @@
+# fly.toml file generated for meal-ideas-backend on 2023-04-18T11:30:29-04:00
+
+app = "meal-ideas-backend"
+kill_signal = "SIGINT"
+kill_timeout = 5
+mounts = []
+primary_region = "yyz"
+processes = []
+
+[env]
+  PORT = "8080"
+  POSTGRESQL_HOST="meal-ideas.internal"
+  POSTGRES_DATABASE="recipe-app-db"
+  POSTGRES_USER="postgres"
+  POSTGRES_PORT=5432
+
+[[services]]
+  internal_port = 8080
+  processes = ["app"]
+  protocol = "tcp"
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
